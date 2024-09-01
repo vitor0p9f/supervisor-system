@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title></title>
     <link href="style.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   </head>
   <body>
     <h1>Histórico da umidade</h1>
     <nav class="navigation">
-      <button>Diário</button>
+      <button class="active">Diário</button>
       <p>|</p>
       <button>Semanal</button>
       <p>|</p>
@@ -17,6 +18,9 @@
       <p>|</p>
       <button>Anual</button>
     </nav>
-    <main></main>
+    <main>
+      <canvas id="chart"></canvas>
+    </main>
   </body>
+  <script type="text/javascript" src="script.js"></script>
 </html>
