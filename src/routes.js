@@ -62,4 +62,19 @@ router.get("/frontend/monthly/:date", async (request, response) => {
   response.status(200).json(records);
 });
 
+router.get("/frontend/annual/:date", async (request, response) => {
+  const records = await Record.findAll({
+    where: {
+      createdAt: {
+        [Op.between]: [
+          moment.tz(request.params.date, "America/Sao_Paulo").startOf("year"),
+          moment.tz(request.params.date, "America/Sao_Paulo").endOf("year"),
+        ],
+      },
+    },
+  });
+
+  response.status(200).json(records);
+});
+
 export default router;
