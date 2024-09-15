@@ -7,6 +7,7 @@ const db_connection = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: "postgres",
+    timezone: "America/Sao_Paulo",
   },
 );
 
