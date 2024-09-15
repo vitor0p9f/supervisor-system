@@ -26,4 +26,19 @@ router.get("/frontend/daily/:date", async (request, response) => {
   response.status(200).json(records);
 });
 
+router.get("/frontend/weekly/:date", async (request, response) => {
+  const records = await Record.findAll({
+    where: {
+      createdAt: {
+        [Op.between]: [
+          moment.tz(request.params.date, "America/Sao_Paulo").startOf("week").subtract(1, 'days'), // Start of the week on Sunday
+          moment.tz(request.params.date, "America/Sao_Paulo").endOf("week").add(6, 'days'), // End of the week on Saturday
+        ],
+      },
+    },
+  });
+
+  response.status(200).json(records);
+});
+
 export default router;
