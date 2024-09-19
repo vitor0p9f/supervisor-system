@@ -1,6 +1,7 @@
 import express from "express";
 import routes from "./routes.js";
 import database from "../database/connection.js";
+import cors from "cors";
 
 const server = express();
 const port = process.env.PORT || 4000;
@@ -13,6 +14,7 @@ try {
   console.error("Unable to connect to the database:", error);
 }
 
+server.use(cors());
 server.use(routes);
 
 server.listen(port, () => {
