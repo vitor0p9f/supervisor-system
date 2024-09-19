@@ -38,24 +38,54 @@ router.get("/frontend/daily/:date", async (request, response) => {
 });
 
 router.get("/frontend/weekly/:date", async (request, response) => {
-  const records = await Record.findAll({
-    where: {
-      createdAt: {
-        [Op.between]: [
-          moment
-            .tz(request.params.date, "America/Sao_Paulo")
-            .startOf("week")
-            .subtract(1, "days"), // Start of the week on Sunday
-          moment
-            .tz(request.params.date, "America/Sao_Paulo")
-            .endOf("week")
-            .add(6, "days"), // End of the week on Saturday
-        ],
-      },
-    },
-  });
+  const startOfTheWeek = moment
+    .tz(request.params.date, "America/Sao_Paulo")
+    .startOf("week");
+  const endOfTheWeek = moment
+    .tz(request.params.date, "America/Sao_Paulo")
+    .endOf("week");
 
-  response.status(200).json(records);
+  const weekDays = [
+    "Domingo",
+    "Segunda",
+    "Terça",
+    "Quarta",
+    "Quinta",
+    "Sexta",
+    "Sábado",
+  ];
+  const currentDate = startOfTheWeek;
+  let weeklyValues = [];
+  let dayCounter = 0;
+
+  while (currentDate.isSameOrBefore(endOfTheWeek)) {
+    const dailyValues = await Record.findAll({
+      attributes: [
+        [fn("MIN", col("value")), "min"],
+        [fn("MAX", col("value")), "max"],
+      ],
+      where: {
+        createdAt: {
+          [Op.between]: [
+            moment.tz(currentDate, timeZone).startOf("day"),
+            moment.tz(currentDate, timeZone).endOf("day"),
+          ],
+        },
+      },
+    });
+
+    weeklyValues.push({
+      day: weekDays[dayCounter],
+      max: dailyValues[0].dataValues.max,
+      min: dailyValues[0].dataValues.min,
+    });
+
+    currentDate.add(1, "days");
+
+    dayCounter++;
+  }
+
+  response.status(200).json(weeklyValues);
 });
 
 router.get("/frontend/monthly/:date", async (request, response) => {
