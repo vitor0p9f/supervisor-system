@@ -89,18 +89,41 @@ router.get("/frontend/weekly/:date", async (request, response) => {
 });
 
 router.get("/frontend/monthly/:date", async (request, response) => {
-  const records = await Record.findAll({
-    where: {
-      createdAt: {
-        [Op.between]: [
-          moment.tz(request.params.date, "America/Sao_Paulo").startOf("month"),
-          moment.tz(request.params.date, "America/Sao_Paulo").endOf("month"),
-        ],
-      },
-    },
-  });
+  const startOfTheMonth = moment
+    .tz(request.params.date, "America/Sao_Paulo")
+    .startOf("month");
+  const endOfTheMonth = moment
+    .tz(request.params.date, "America/Sao_Paulo")
+    .endOf("month");
 
-  response.status(200).json(records);
+  const currentDate = startOfTheMonth;
+  let monthValues = [];
+
+  while (currentDate.isSameOrBefore(endOfTheMonth)) {
+    const dailyValues = await Record.findAll({
+      attributes: [
+        [fn("MIN", col("value")), "min"],
+        [fn("MAX", col("value")), "max"],
+      ],
+      where: {
+        createdAt: {
+          [Op.between]: [
+            moment.tz(currentDate, timeZone).startOf("day"),
+            moment.tz(currentDate, timeZone).endOf("day"),
+          ],
+        },
+      },
+    });
+
+    monthValues.push({
+      max: dailyValues[0].dataValues.max,
+      min: dailyValues[0].dataValues.min,
+    });
+
+    currentDate.add(1, "days");
+  }
+
+  response.status(200).json(monthValues);
 });
 
 router.get("/frontend/annual/:date", async (request, response) => {
