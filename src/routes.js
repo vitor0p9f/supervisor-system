@@ -127,18 +127,50 @@ router.get("/frontend/monthly/:date", async (request, response) => {
 });
 
 router.get("/frontend/annual/:date", async (request, response) => {
-  const records = await Record.findAll({
-    where: {
-      createdAt: {
-        [Op.between]: [
-          moment.tz(request.params.date, "America/Sao_Paulo").startOf("year"),
-          moment.tz(request.params.date, "America/Sao_Paulo").endOf("year"),
-        ],
-      },
-    },
-  });
+  let annualValues = [];
+  const months = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ];
 
-  response.status(200).json(records);
+  for (let index = 0; index < 12; index++) {
+    const date = moment
+      .tz(request.params.date, "America/Sao_Paulo")
+      .month(index);
+
+    const monthValues = await Record.findAll({
+      attributes: [
+        [fn("MIN", col("value")), "min"],
+        [fn("MAX", col("value")), "max"],
+      ],
+      where: {
+        createdAt: {
+          [Op.between]: [
+            moment.tz(date, timeZone).startOf("month"),
+            moment.tz(date, timeZone).endOf("month"),
+          ],
+        },
+      },
+    });
+
+    annualValues.push({
+      month: months[index],
+      max: monthValues[0].dataValues.max,
+      min: monthValues[0].dataValues.min,
+    });
+  }
+
+  response.status(200).json(annualValues);
 });
 
 export default router;
