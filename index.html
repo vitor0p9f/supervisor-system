@@ -10,17 +10,20 @@
   <body>
     <h1>Histórico da umidade</h1>
     <nav class="navigation">
-      <button class="active">Diário</button>
+      <button class="active" id="daily">Diário</button>
       <p>|</p>
-      <button>Semanal</button>
+      <button id="weekly">Semanal</button>
       <p>|</p>
-      <button>Mensal</button>
+      <button id="monthly">Mensal</button>
       <p>|</p>
-      <button>Anual</button>
+      <button id="annual">Anual</button>
     </nav>
     <main>
       <canvas id="chart"></canvas>
     </main>
   </body>
+  <script type="text/javascript" src="charts/daily.js"></script>
+  <script type="text/javascript" src="moment.js"></script>
+  <script type="text/javascript" src="moment-timezone.js"></script>
   <script type="text/javascript" src="script.js"></script>
 </html>
