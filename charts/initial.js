@@ -1,7 +1,7 @@
 const initialGraph = async () => {
   const date = moment().tz("America/Sao_Paulo").format("YYYY-MM-DD");
 
-  const response = await fetch(`http://localhost:4000/frontend/daily/${date}`, {
+  const response = await fetch(`https://supervisor-system.onrender.com/frontend/daily/${date}`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',

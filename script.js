@@ -1,5 +1,6 @@
 const buttons = document.querySelectorAll("button");
 const canvas = document.querySelector("#chart");
+const host = "https://supervisor-system.onrender.com";
 
 let chart = initialGraph();
 
@@ -17,7 +18,7 @@ buttons.forEach((button) => {
 
     switch (button.id) {
       case "daily":
-        response = await fetch(`http://localhost:4000/frontend/daily/${date}`, {
+        response = await fetch(`${host}/frontend/daily/${date}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -32,7 +33,7 @@ buttons.forEach((button) => {
         break;
 
       case "weekly":
-        response = await fetch(`http://localhost:4000/frontend/weekly/${date}`, {
+        response = await fetch(`${host}/frontend/weekly/${date}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -47,7 +48,7 @@ buttons.forEach((button) => {
         break;
 
       case "monthly":
-        response = await fetch(`http://localhost:4000/frontend/monthly/${date}`, {
+        response = await fetch(`${host}/frontend/monthly/${date}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -62,7 +63,7 @@ buttons.forEach((button) => {
         break;
 
       case "annual":
-        response = await fetch(`http://localhost:4000/frontend/annual/${date}`, {
+        response = await fetch(`${host}/frontend/annual/${date}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
