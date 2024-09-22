@@ -46,6 +46,36 @@ buttons.forEach((button) => {
         chart = new Chart(canvas, generateWeeklyGraphConfig(values));
         break;
 
+      case "monthly":
+        response = await fetch(`http://localhost:4000/frontend/monthly/${date}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+
+        values = await response.json();
+
+        chart.destroy();
+
+        chart = new Chart(canvas, generateMonthlyChartConfig(values));
+        break;
+
+      case "annual":
+        response = await fetch(`http://localhost:4000/frontend/monthly/${date}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+
+        values = await response.json();
+
+        chart.destroy();
+
+        chart = new Chart(canvas, generateAnnualChartConfig(values));
+        break;
+
       default:
         break;
     }
