@@ -13,6 +13,12 @@ router.get("/esp32/:value", async (request, response) => {
   response.status(200).send(record);
 });
 
+router.get("/refresh",(request,response) => {
+  console.log("Mantendo o servidor de pé...");
+
+  response.status(200).send();
+});
+
 router.get("/frontend/daily/:date", async (request, response) => {
   const records = await Record.findAll({
     attributes: ["value", "createdAt"],
